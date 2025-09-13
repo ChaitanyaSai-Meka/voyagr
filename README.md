@@ -1,2 +1,21 @@
 # voyagr
-Voyagr is a web-based trip planner where users can add destinations, set priorities,  and get optimized travel routes with smooth animations. Built with Next.js, Supabase,  Node.js, Express, FastAPI, and graph algorithms like Dijkstra, Bellman-Ford, and TSP solvers.
+
+Tech Stack :
+
+Next.js
+
+Tailwind CSS
+
+Framer Motion / GSAP
+
+Node.js + Express
+
+FastAPI 
+
+Supabase (PostgreSQL)
+
+Redis (for caching/rate limiting)
+
+Vercel (frontend hosting)
+
+Railway / Render (backend hosting)
