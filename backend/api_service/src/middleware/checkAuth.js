@@ -1,4 +1,4 @@
-import { supabase } from '../config/supabaseClient.js'; // Import our configured Supabase client
+import { supabase } from '../config/supabaseClient.js';
 
 
 export const checkAuth = async (req, res, next) => {
@@ -25,7 +25,7 @@ export const checkAuth = async (req, res, next) => {
       console.warn('Supabase token verification error:', error.message);
       return res.status(401).json({ error: 'Invalid or expired token.' });
     }
-    
+
     if (!user) {
       console.warn('Token valid but no user found.');
       return res.status(401).json({ error: 'Unauthorized: User not found for this token.' });
