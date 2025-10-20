@@ -127,27 +127,27 @@ export const logIn = async (req,res)=>{
 /* Logout */
 
 export const logOut = async (req,res)=>{
-    // const {userId} = req.body;
+    const authHeader = req.headers.authorization;
+    const token = authHeader?.split(' ')[1];
 
-    /* Validation */
-    // if(!userId){
-    //     return res.status(400).json({ error: 'User ID is required for logout.'});
-    // }
-    /* Validation - End */
+    if (!token) {
+        console.error('Logout attempted without token, even after checkAuth.');
+        return res.status(401).json({ error: 'Authorization token missing.' });
+    }
+    try {
+        const { error } = await supabase.auth.signOut(token);
 
-    // try{
-    //     const {error} = await supabase.auth.signOut();
-    //     if(error){
-    //         console.error('Supabase logout error:', error);
-    //         return res.status(400).json({ error: 'Error during logout. Please try again.'});
-    //     }
+        if (error) {
+        console.error('Supabase signOut error:', error);
+        return res.status(200).json({ message: "Logout processed (client should clear token)." });
+        }
 
         return res.status(200).json({
-            message:"Logout successful!"
+        message: "Logout successful!"
         });
 
-    // }catch(err){
-    //     console.error('Server error during logout:', err);
-    //     res.status(500).json({ error: 'Server error during logout.' });
-    // }
+    } catch (err) {
+        console.error('Server error during logout:', err);
+        res.status(500).json({ message: 'Server error during logout, but client should clear token.' });
+    }
 }   
