@@ -8,7 +8,7 @@ export const signUp = async (req, res) => {
   if(!email || !password|| !username) {
     return res.status(400).json({ error: 'Email, password, and username are required' });
   }
-  if(!password<6){
+  if(password.length < 6){
     return res.status(400).json({error:"password length should be more than 6 characters"})
   }
   /* Validation - End*/
@@ -55,41 +55,41 @@ export const signUp = async (req, res) => {
 
 /* Otp-Verification */
 
-export const verifyOtp = async (req, res) => {
-    const { email, token } = req.body;
+// export const verifyOtp = async (req, res) => {
+//     const { email, token } = req.body;
 
     /* Validation */
-    if (!email || !token) {
-        return res.status(400).json({ error: 'Email and OTP token are required.' });
-    }
+    // if (!email || !token) {
+    //     return res.status(400).json({ error: 'Email and OTP token are required.' });
+    // }
     
-    if (!/^\d{6}$/.test(token)) {
-      return res.status(400).json({ error: 'Invalid OTP format. Must be 6 digits.' });
-    }
+    // if (!/^\d{6}$/.test(token)) {
+    //   return res.status(400).json({ error: 'Invalid OTP format. Must be 6 digits.' });
+    // }
 
     /* Validation - End */
 
-    try{
-        const {data,error} = await supabase.auth.verifyOtp({
-            email:email,
-            token:token,
-            type:'signup'
-        })
-        if (error) {
-            console.error('Supabase OTP verification error:', error);
-            return res.status(400).json({ error: 'Invalid or expired OTP. Please try again.' });
-        }
-        return res.status(200).json({
-            message: 'Email verified successfully! User is now logged in.',
-            user: data.user,
-            session: data.session 
-        });
+//     try{
+//         const {data,error} = await supabase.auth.verifyOtp({
+//             email:email,
+//             token:token,
+//             type:'signup'
+//         })
+//         if (error) {
+//             console.error('Supabase OTP verification error:', error);
+//             return res.status(400).json({ error: 'Invalid or expired OTP. Please try again.' });
+//         }
+//         return res.status(200).json({
+//             message: 'Email verified successfully! User is now logged in.',
+//             user: data.user,
+//             session: data.session 
+//         });
 
-    }catch(err){
-        console.error('Server error during OTP verification:', err);
-        res.status(500).json({ error: 'Server error during OTP verification.' });
-    }
-}
+//     }catch(err){
+//         console.error('Server error during OTP verification:', err);
+//         res.status(500).json({ error: 'Server error during OTP verification.' });
+//     }
+// }
 
 /* Login */
 

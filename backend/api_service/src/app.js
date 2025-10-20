@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import authRoutes from './api/auth/auth.routes.js';
 import profileRoutes from './api/profiles/profiles.routes.js';
+import routesRoutes from './api/routes/routes.routes.js';
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/profiles', profileRoutes);
+app.use('/api/routes', routesRoutes);
 
 app.listen(port, () => {
   console.log(`Voyagr API is running on port ${port}`);
