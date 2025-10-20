@@ -6,6 +6,7 @@ import profileRoutes from './api/profiles/profiles.routes.js';
 import routesRoutes from './api/routes/routes.routes.js';
 import savedRoutes from './api/saved/saved.routes.js';
 import historyRoutes from './api/history/history.routes.js';
+import feedbackRoutes from './api/feedback/feedback.routes.js';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use('/api/profiles', profileRoutes);
 app.use('/api/routes', routesRoutes);
 app.use('/api/saved', savedRoutes);
 app.use('/api/history', historyRoutes);
+app.use('/api/feedback', feedbackRoutes);
 
 app.listen(port, () => {
   console.log(`Voyagr API is running on port ${port}`);
