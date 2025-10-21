@@ -21,6 +21,10 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
+  let totalEdges = 0;
+  if (metroGraph) {
+      metroGraph.forEach(edges => totalEdges += edges.length);
+  }
   res.json({
     message: 'Route Calculation Service is running!',
     stopsLoaded: loadedStops ? loadedStops.size : 0,
@@ -29,13 +33,14 @@ app.get('/', (req, res) => {
     stopTimesLoaded: loadedStopTimes ? `Data loaded for ${loadedStopTimes.size} trips` : 'Not loaded',
     calendarLoaded: loadedCalendar ? `${loadedCalendar.size} services loaded` : 'Not loaded',
     shapesLoaded: loadedShapes ? `${loadedShapes.size} shapes loaded` : 'Not loaded',
-    graphNodes: metroGraph ? metroGraph.size : 0
+    graphNodes: metroGraph ? metroGraph.size : 0,
+    graphTotalEdges: totalEdges
   });
 });
 
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send({ error: 'Something went wrong!' });
+    console.error("Global Error Handler:", err.stack || err);
+    res.status(500).json({ error: 'An internal server error occurred.' });
 });
 
 const startServer = async () => {
@@ -52,7 +57,7 @@ const startServer = async () => {
       ]);
       console.log("All GTFS data loaded successfully.");
 
-      metroGraph = buildGraph(loadedStops);
+      metroGraph = buildGraph(loadedStops, loadedStopTimes);
       console.log("Metro graph built successfully (with transfers).");
 
       app.listen(port, () => {

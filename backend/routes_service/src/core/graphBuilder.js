@@ -1,5 +1,5 @@
 
-export const buildGraph = (stopsMap, defaultTransferTimeSeconds = 300) => {
+export const buildGraph = (stopsMap, stopTimesMap, defaultTransferTimeSeconds = 300) => {
     console.log("Building graph...");
     const adjacencyList = new Map();
 
@@ -51,8 +51,42 @@ export const buildGraph = (stopsMap, defaultTransferTimeSeconds = 300) => {
     });
     console.log(`Added ${transferEdgeCount} transfer edges.`);
 
+    let travelEdgeCount = 0;
+    stopTimesMap.forEach((stopTimes, tripId) => {
 
-    console.log("Graph built with transfer edges.");
+        for (let i = 0; i < stopTimes.length - 1; i++) {
+            const currentStopTime = stopTimes[i];
+            const nextStopTime = stopTimes[i + 1];
+
+            const originStopId = currentStopTime.stopId;
+            const destinationStopId = nextStopTime.stopId;
+
+
+            if (adjacencyList.has(originStopId) && adjacencyList.has(destinationStopId)) {
+                const travelDurationSeconds = calculateTravelDuration(nextStopTime.arrivalTime, currentStopTime.departureTime);
+
+                if (travelDurationSeconds !== null) {
+                    adjacencyList.get(originStopId).push({
+                        type: 'travel',
+                        destinationStopId: destinationStopId,
+                        tripId: tripId,
+                        departureTime: currentStopTime.departureTime,
+                        arrivalTime: nextStopTime.arrivalTime,     
+                        travelDurationSeconds: travelDurationSeconds
+                    });
+                    travelEdgeCount++;
+                } else {
+                    console.warn(`Could not calculate travel duration for trip ${tripId}, seq ${currentStopTime.stopSequence} -> ${nextStopTime.stopSequence}. Skipping edge.`);
+                }
+            } else {
+            
+            }
+        }
+    });
+    console.log(`Added ${travelEdgeCount} travel edges.`);
+
+
+    console.log("Graph build complete.");
     return adjacencyList;
 };
 
