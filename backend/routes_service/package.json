@@ -105,6 +105,7 @@
     "simple-update-notifier": "^2.0.0",
     "statuses": "^2.0.2",
     "supports-color": "^5.5.0",
+    "tinyqueue": "^3.0.0",
     "to-regex-range": "^5.0.1",
     "toidentifier": "^1.0.1",
     "touch": "^3.1.1",

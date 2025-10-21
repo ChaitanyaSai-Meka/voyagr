@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { loadStops, loadRoutes, loadTrips, loadStopTimes, loadCalendar, loadShapes} from './core/gtfsLoader.js';
+import { buildGraph } from './core/graphBuilder.js';
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ let loadedTrips = null;
 let loadedStopTimes = null;
 let loadedCalendar = null;
 let loadedShapes = null;
+let metroGraph = null;
 
 app.use(cors());
 app.use(express.json());
@@ -26,7 +28,8 @@ app.get('/', (req, res) => {
     tripsLoaded: loadedTrips ? loadedTrips.size : 0,
     stopTimesLoaded: loadedStopTimes ? `Data loaded for ${loadedStopTimes.size} trips` : 'Not loaded',
     calendarLoaded: loadedCalendar ? `${loadedCalendar.size} services loaded` : 'Not loaded',
-    shapesLoaded: loadedShapes ? `${loadedShapes.size} shapes loaded` : 'Not loaded'
+    shapesLoaded: loadedShapes ? `${loadedShapes.size} shapes loaded` : 'Not loaded',
+    graphNodes: metroGraph ? metroGraph.size : 0
   });
 });
 
@@ -36,29 +39,25 @@ app.use((err, req, res, next) => {
 });
 
 const startServer = async () => {
+
   try {
-    console.log("Loading GTFS data...");
-    loadedStops = await loadStops();
-    console.log("GTFS stops loaded successfully.");
+      console.log("Loading GTFS data...");
+      [loadedStops, loadedRoutes, loadedTrips, loadedStopTimes, loadedCalendar, loadedShapes] = await Promise.all([
+          loadStops(),
+          loadRoutes(),
+          loadTrips(),
+          loadStopTimes(),
+          loadCalendar(),
+          loadShapes()
+      ]);
+      console.log("All GTFS data loaded successfully.");
 
-    loadedRoutes = await loadRoutes();
-    console.log("GTFS routes loaded successfully.");
+      metroGraph = buildGraph(loadedStops);
+      console.log("Metro graph built successfully (with transfers).");
 
-    loadedTrips = await loadTrips();
-    console.log("GTFS trips loaded successfully.");
-
-    loadedStopTimes = await loadStopTimes(); 
-    console.log("GTFS stop times loaded successfully.");
-
-    loadedCalendar = await loadCalendar();
-    console.log("GTFS calendar loaded successfully.");
-
-    loadedShapes = await loadShapes();
-    console.log("GTFS shapes loaded successfully.");
-
-    app.listen(port, () => {
-      console.log(`Route service listening on http://localhost:${port}`);
-    });
+      app.listen(port, () => {
+        console.log(`Route service listening on http://localhost:${port}`);
+      });
 
   } catch (error) {
     console.error("FATAL: Failed to load GTFS data on startup. Server not started.", error);
