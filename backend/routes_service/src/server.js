@@ -3,19 +3,20 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { loadStops, loadRoutes, loadTrips, loadStopTimes, loadCalendar, loadShapes} from './core/gtfsLoader.js';
 import { buildGraph } from './core/graphBuilder.js';
+import calculationRoutes from './routes/calculation.routes.js';
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3002;
 
-let loadedStops = null;
-let loadedRoutes = null;
-let loadedTrips = null;
-let loadedStopTimes = null;
-let loadedCalendar = null;
-let loadedShapes = null;
-let metroGraph = null;
+export let loadedStops = null;
+export let loadedRoutes = null;
+export let loadedTrips = null;
+export let loadedStopTimes = null;
+export let loadedCalendar = null;
+export let loadedShapes = null;
+export let metroGraph = null;
 
 app.use(cors());
 app.use(express.json());
@@ -38,24 +39,29 @@ app.get('/', (req, res) => {
   });
 });
 
+app.use('/', calculationRoutes);
+
 app.use((err, req, res, next) => {
-    console.error("Global Error Handler:", err.stack || err);
-    res.status(500).json({ error: 'An internal server error occurred.' });
+    console.error("Global Error Handler:", err.message || err);
+    res.status(500).json({ error: 'An internal server error occurred. Please try again later.' });
 });
 
 const startServer = async () => {
 
   try {
       console.log("Loading GTFS data...");
-      [loadedStops, loadedRoutes, loadedTrips, loadedStopTimes, loadedCalendar, loadedShapes] = await Promise.all([
-          loadStops(),
-          loadRoutes(),
-          loadTrips(),
-          loadStopTimes(),
-          loadCalendar(),
-          loadShapes()
-      ]);
+      const [stops, routes, trips, stopTimes, calendar, shapes] = await Promise.all([
+              loadStops(), loadRoutes(), loadTrips(), loadStopTimes(), loadCalendar(), loadShapes()
+          ]);
+
+      loadedStops = stops;
+      loadedRoutes = routes;
+      loadedTrips = trips;
+      loadedStopTimes = stopTimes;
+      loadedCalendar = calendar;
+      loadedShapes = shapes;
       console.log("All GTFS data loaded successfully.");
+      
 
       metroGraph = buildGraph(loadedStops, loadedStopTimes);
       console.log("Metro graph built successfully (with transfers).");
