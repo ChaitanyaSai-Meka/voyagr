@@ -1,4 +1,4 @@
-import { findFastestPath } from '../core/aStar.js';
+import { findFastestPathDijkstra } from '../core/dijkstra.js';
 import { parseGTFSTime } from '../core/graphBuilder.js';
 import { loadedStops, loadedTrips, loadedCalendar, metroGraph } from '../server.js';
 
@@ -69,15 +69,11 @@ export const handleCalculation = async (req, res, next) => {
 
     try {
         console.log(`Calling findFastestPath from ${start_station_id} to ${end_station_id} departing around ${departureTimeSeconds}s on ${departureDateObj.toDateString()}`);
-        const pathResult = findFastestPath(
+        const pathResult = findFastestPathDijkstra(
             start_station_id,
             end_station_id,
             departureTimeSeconds,
-            departureDateObj,    
-            metroGraph,
-            loadedStops,
-            loadedTrips,
-            loadedCalendar
+            departureDateObj,
         );
 
         if (pathResult) {
