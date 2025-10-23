@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { loadStops, loadRoutes, loadTrips, loadStopTimes, loadCalendar, loadShapes} from './core/gtfsLoader.js';
 import { buildGraph } from './core/graphBuilder.js';
 import calculationRoutes from './routes/calculation.routes.js';
+import mapRoutes from './routes/map.routes.js';
 
 dotenv.config();
 
@@ -40,6 +41,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/', calculationRoutes);
+app.use('/', mapRoutes);
 
 app.use((err, req, res, next) => {
     console.error("Global Error Handler:", err.message || err);
