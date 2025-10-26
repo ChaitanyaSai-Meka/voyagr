@@ -1,0 +1,29 @@
+services:
+  # --- API Service ---
+  api_service:
+    build: ./api_service
+    container_name: voygr-api-service
+    ports:
+      - "5998:5998"
+    environment:
+      NODE_ENV: production
+      PORT: 5998
+      # SUPABASE_URL: ${SUPABASE_URL}
+      # SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+      ROUTE_SERVICE_URL: http://route_service:3002/calculate
+    depends_on:
+      - route_service
+    env_file:
+      - ./api_service/.env
+
+  # --- Route Service ---
+  route_service:
+    build: ./routes_service
+    container_name: voygr-route-service
+    ports:
+      - "3002:3002"
+    environment:
+      NODE_ENV: production
+      PORT: 3002
+    env_file:
+      - ./routes_service/.env
