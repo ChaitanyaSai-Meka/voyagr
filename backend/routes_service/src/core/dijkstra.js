@@ -46,7 +46,6 @@ export const findFastestPathDijkstra = (
             dateString <= calendarEntry.endDate &&
             calendarEntry[dayOfWeek]
         ) {
-            // TODO: Add logic here to check calendar_dates.txt for exceptions
             return true;
         }
         return false;
