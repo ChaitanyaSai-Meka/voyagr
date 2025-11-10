@@ -1,0 +1,68 @@
+# ------------------------------
+#  Python
+# ------------------------------
+__pycache__
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+*.egg-info/
+*.egg
+
+# ------------------------------
+#  Virtual Environments
+# ------------------------------
+.venv
+.env
+venv
+env.bak
+venv.bak
+
+# ------------------------------
+#  UV / Pip
+# ------------------------------
+uv.lock          
+pip-wheel-metadata/
+*.whl
+dist/
+build/
+
+# ------------------------------
+#  IDE / Editor
+# ------------------------------
+.vscode
+.idea
+*.swp
+*.swo
+*.swn
+
+# ------------------------------
+#  System Files (macOS / Linux / Windows)
+# ------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ------------------------------
+#  Logs & Temp
+# ------------------------------
+*.log
+logs/
+*.out
+*.tmp
+*.bak
+
+# ------------------------------
+#  Test / Coverage
+# ------------------------------
+.coverage
+htmlcov
+pytest_cache
+.cache
+
+# ------------------------------
+#   FastAPI / Deployment
+# ------------------------------
+*.db
+*.sqlite3
+*.pid
