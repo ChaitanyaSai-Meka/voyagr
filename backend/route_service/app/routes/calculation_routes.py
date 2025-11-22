@@ -10,8 +10,8 @@ async def calculate_route(request: Request, body: CalculateRouteRequest):
     graph = request.app.state.metro_graph
     gtfs_data = request.app.state.gtfs_data
     
-    from core.Dijkstra import find_fastest_path
-    from core.graph_builder import parse_time_to_seconds
+    from ..core.Dijkstra import find_fastest_path
+    from ..core.graph_builder import parse_time_to_seconds
     
     dep_time_secs = parse_time_to_seconds(body.departure_time)
     

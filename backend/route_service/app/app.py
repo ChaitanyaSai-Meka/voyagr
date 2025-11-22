@@ -32,5 +32,5 @@ app.include_router(calculation_router)
 def health_check():
     return {"status": "healthy", "message": "Route Calculation Service is running"}
 
-if __name__ == "__main__":
-    uvicorn.run("app:app", host="0.0.0.0", port=3002, reload=True)
+# if __name__ == "__main__":
+#     uvicorn.run("app:app", host="0.0.0.0", port=3003, reload=True)
